@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.google.guava:guava:30.1.1-jre'
     implementation 'jakarta.activation:jakarta.activation-api:2.0.1'
 
+
     implementation('org.apache.camel:camel-milo:3.4.4') {
         exclude group: 'javax.activation', module: 'jakarta.activation-api'
         exclude group: 'com.google.guava', module: 'guava'
