@@ -7,10 +7,21 @@ public class Device implements Serializable {
     String IP_addr;
     String firmware_version;
 
-    public Device(String MAC, String IP_addr, String firmware_version) {
+    String name;
+
+    public Device(String MAC, String IP_addr, String firmware_version, String name) {
         this.MAC = MAC;
         this.IP_addr = IP_addr;
         this.firmware_version = firmware_version;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getMAC() {

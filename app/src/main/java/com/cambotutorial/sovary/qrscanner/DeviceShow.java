@@ -19,8 +19,10 @@ public class DeviceShow extends AppCompatActivity {
         EditText etMac =  (EditText) findViewById(R.id.etMac);
         EditText etIP =  (EditText) findViewById(R.id.etIpAddr);
         EditText etFirm =  (EditText) findViewById(R.id.etFirm);
+        EditText etDevName =  (EditText) findViewById(R.id.etDeviceName);
         etMac.setText(value.getMAC());
         etIP.setText(value.getIP_addr().toString());
         etFirm.setText(value.getFirmware_version().toString());
+        etDevName.setText(value.getName().toString());
     }
 }

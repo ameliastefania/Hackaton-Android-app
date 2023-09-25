@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +22,7 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.cambotutorial.sovary.qrscanner.Interface;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         deviceMap = new HashMap<String,Device>();
-        ImageView myImage = (ImageView) findViewById(R.id);
+        ImageView myImage = (ImageView) findViewById(R.id.imgView);
+        myImage.setImageResource(R.drawable.logo);
 
 
-        Device dev1 = new Device("EC74BA505D2C", "10.20.32.8", "HiOS-09.5.00-tst");
-        Device dev2 = new Device("ECE555C84C4", "10.20.32.7", "HiOS-09.5.00-BETA32");
+        Device dev1 = new Device("EC74BA505D2C", "10.20.32.8", "HiOS-09.5.00-tst", "RSP35");
+        Device dev2 = new Device("ECE555C845C4", "10.20.32.7", "HiOS-09.5.00-BETA32", "RSP30");
 
         deviceMap.put(dev1.getMAC(), dev1);
         deviceMap.put(dev2.getMAC(), dev2);
@@ -72,10 +76,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Device foundDevice = deviceMap.get(foundMac);
-            Intent myIntent = new Intent(this, DeviceShow.class);
-            myIntent.putExtra("device", foundDevice);
-            this.startActivity(myIntent);
+            if (foundMac == null) {
+                Toast.makeText(this, "Device doesn't exist. Please, scan again", Toast.LENGTH_LONG).show();
+            } else {
+                Device foundDevice = deviceMap.get(foundMac);
+                Intent myIntent = new Intent(this, DeviceShow.class);
+                myIntent.putExtra("device", foundDevice);
+                this.startActivity(myIntent);
+            }
         }
     });
     private void showManualInputDialog() {
@@ -108,9 +116,26 @@ public class MainActivity extends AppCompatActivity {
     }
     private void handleManualInput(String code) {
         // Handle the manually entered code here
-        Intent myIntent = new Intent(this, DeviceShow.class);
-        myIntent.putExtra("MAC", code);
-        this.startActivity(myIntent);
+        Device foundDevice = null;
+        if (code!=null) {
+            for (String MAC : deviceMap.keySet()) {
+                if (code != null) {
+                    if (code.equals(MAC)) {
+                        foundDevice = deviceMap.get(MAC);
+                    }
+                }
+            }
+        } else {
+            Toast.makeText(this, "No input", Toast.LENGTH_LONG).show();
+        }
+        if (foundDevice != null) {
+            Intent myIntent = new Intent(this, DeviceShow.class);
+            myIntent.putExtra("device", foundDevice);
+            this.startActivity(myIntent);
+        } else {
+            Toast.makeText(this, "The device is not recognized", Toast.LENGTH_LONG).show();
+        }
+
     }
 
 }
