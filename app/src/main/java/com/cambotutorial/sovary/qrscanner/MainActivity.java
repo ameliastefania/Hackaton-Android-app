@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import android.view.LayoutInflater;
@@ -19,15 +20,27 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.cambotutorial.sovary.qrscanner.Interface;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
     Button btn_scan;
     Button btn_manual_input;
     private Interface apiInterface;
+    HashMap<String,Device> deviceMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        deviceMap = new HashMap<String,Device>();
+        ImageView myImage = (ImageView) findViewById(R.id);
+
+
+        Device dev1 = new Device("EC74BA505D2C", "10.20.32.8", "HiOS-09.5.00-tst");
+        Device dev2 = new Device("ECE555C84C4", "10.20.32.7", "HiOS-09.5.00-BETA32");
+
+        deviceMap.put(dev1.getMAC(), dev1);
+        deviceMap.put(dev2.getMAC(), dev2);
 
         btn_scan = findViewById(R.id.btn_scan);
         btn_manual_input = findViewById(R.id.btn_manual_input);
@@ -52,8 +65,16 @@ public class MainActivity extends AppCompatActivity {
         if (result.getContents() != null) {
             // Get the scanned barcode or QR code content
             String scannedData = result.getContents();
+            String foundMac = null;
+            for (String MAC : deviceMap.keySet()) {
+                if (scannedData.equals(MAC)) {
+                    foundMac = MAC;
+                }
+            }
+
+            Device foundDevice = deviceMap.get(foundMac);
             Intent myIntent = new Intent(this, DeviceShow.class);
-            myIntent.putExtra("MAC", scannedData);
+            myIntent.putExtra("device", foundDevice);
             this.startActivity(myIntent);
         }
     });

@@ -14,11 +14,13 @@ public class DeviceShow extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_show);
 
-        Intent intent = getIntent();
-        String value = intent.getStringExtra("MAC");
-        Toast.makeText(this, "My value: " + value,Toast.LENGTH_LONG).show();
+        Device value = (Device) getIntent().getSerializableExtra("device");
 
         EditText etMac =  (EditText) findViewById(R.id.etMac);
-        etMac.setText(value);
+        EditText etIP =  (EditText) findViewById(R.id.etIpAddr);
+        EditText etFirm =  (EditText) findViewById(R.id.etFirm);
+        etMac.setText(value.getMAC());
+        etIP.setText(value.getIP_addr().toString());
+        etFirm.setText(value.getFirmware_version().toString());
     }
 }
