@@ -1,25 +1,21 @@
  package com.cambotutorial.sovary.qrscanner;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AppCompatActivity;
+ import android.app.AlertDialog;
+ import android.content.DialogInterface;
+ import android.os.Bundle;
+ import android.widget.Button;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
+ import androidx.activity.result.ActivityResultLauncher;
+ import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.journeyapps.barcodescanner.ScanContract;
-import com.journeyapps.barcodescanner.ScanOptions;
-import com.cambotutorial.sovary.qrscanner.Interface;
+ import com.journeyapps.barcodescanner.ScanContract;
+ import com.journeyapps.barcodescanner.ScanOptions;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.component.milo.client.MiloClientComponent;
+ import org.apache.camel.CamelContext;
+ import org.apache.camel.ProducerTemplate;
+ import org.apache.camel.builder.RouteBuilder;
+ import org.apache.camel.component.milo.client.MiloClientComponent;
+ import org.apache.camel.impl.DefaultCamelContext;
 
 /*
 import retrofit2.Call;

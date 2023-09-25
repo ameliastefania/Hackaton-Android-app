@@ -1,20 +1,19 @@
+
 plugins {
     id 'com.android.application'
 }
 
 android {
-    compileSdk 33
-
+    namespace 'com.cambotutorial.sovary.qrscanner'
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.cambotutorial.sovary.qrscanner"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
 
     buildTypes {
         release {
@@ -22,11 +21,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'com.cambotutorial.sovary.qrscanner'
 
     packagingOptions {
         exclude 'META-INF/INDEX.LIST'
@@ -36,7 +35,6 @@ android {
         exclude 'META-INF/jandex.idx'
     }
 }
-
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.0'
@@ -51,18 +49,9 @@ dependencies {
     implementation 'com.google.guava:guava:30.1.1-jre'
     implementation 'jakarta.activation:jakarta.activation-api:2.0.1'
 
-
     implementation('org.apache.camel:camel-milo:3.4.4') {
-        exclude group: 'javax.activation', module: 'javax.activation-api'
+        exclude group: 'javax.activation', module: 'jakarta.activation-api'
         exclude group: 'com.google.guava', module: 'guava'
     }
 
-}
-
-configurations.all {
-    resolutionStrategy {
-        // Prefer the latest version of conflicting dependencies
-        force 'com.google.guava:guava:30.1.1-jre'
-        force 'jakarta.activation:jakarta.activation-api:2.0.1'
-    }
 }
