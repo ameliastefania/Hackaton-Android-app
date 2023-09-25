@@ -1,4 +1,4 @@
- package com.cambotutorial.sovary.qrscanner;
+package com.cambotutorial.sovary.qrscanner;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,25 +10,18 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.cambotutorial.sovary.qrscanner.Interface;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
-
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-
-
-
 public class MainActivity extends AppCompatActivity {
     Button btn_scan;
+    Button btn_manual_input;
     private Interface apiInterface;
 
     @Override
@@ -36,23 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.114:80/") // Replace with your server URL
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        // Create an instance of the API interface
-        apiInterface = retrofit.create(Interface.class);
-
         btn_scan = findViewById(R.id.btn_scan);
+        btn_manual_input = findViewById(R.id.btn_manual_input);
         btn_scan.setOnClickListener(v -> {
             scanCode();
         });
+        btn_manual_input.setOnClickListener(v -> {
+            showManualInputDialog();
+        });
     }
 
-    private void scanCode()
-    {
+    private void scanCode() {
         ScanOptions options = new ScanOptions();
         options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
@@ -65,39 +52,56 @@ public class MainActivity extends AppCompatActivity {
         if (result.getContents() != null) {
             // Get the scanned barcode or QR code content
             String scannedData = result.getContents();
-
-            // Make the API call to your backend to fetch information based on the scanned data
-            apiInterface.getBarcodeInfo(scannedData).enqueue(new Callback<ResponseModel>() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Result");
+            builder.setMessage("Name: " + "test" + "\nDescription: " + scannedData);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
-                public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                    if (response.isSuccessful()) {
-                        // Handle the successful response from the server
-                        ResponseModel responseData = response.body();
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle("Result");
-                        builder.setMessage("Name: " + responseData.getName() + "\nDescription: " + responseData.getDescription());
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        }).show();
-                    } else {
-                        // Handle the case when the response from the server is not successful
-                        // Show an error message or take appropriate action.
-                        Toast.makeText(MainActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
-                    }
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                 }
-
-                @Override
-                public void onFailure(Call<ResponseModel> call, Throwable t) {
-                    // Handle the failure of the API call
-                    // Show an error message or take appropriate action.
-                    Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            }).show();
         }
     });
+    private void showManualInputDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Manual Input");
+
+        // Inflate the layout for the dialog
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_manual_input, null);
+        builder.setView(view);
+
+        EditText editText = view.findViewById(R.id.editTextManualInput);
+
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String manuallyEnteredCode = editText.getText().toString();
+                handleManualInput(manuallyEnteredCode);
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+    private void handleManualInput(String code) {
+        // Handle the manually entered code here
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Result");
+        builder.setMessage("Name: " + "test" + "\nDescription: " + code);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        }).show();
+    }
 
 }
