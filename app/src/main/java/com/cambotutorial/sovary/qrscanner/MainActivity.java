@@ -52,15 +52,9 @@ public class MainActivity extends AppCompatActivity {
         if (result.getContents() != null) {
             // Get the scanned barcode or QR code content
             String scannedData = result.getContents();
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Result");
-            builder.setMessage("Name: " + "test" + "\nDescription: " + scannedData);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).show();
+            Intent myIntent = new Intent(this, DeviceShow.class);
+            myIntent.putExtra("MAC", scannedData);
+            this.startActivity(myIntent);
         }
     });
     private void showManualInputDialog() {
@@ -93,15 +87,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void handleManualInput(String code) {
         // Handle the manually entered code here
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Result");
-        builder.setMessage("Name: " + "test" + "\nDescription: " + code);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        }).show();
+        Intent myIntent = new Intent(this, DeviceShow.class);
+        myIntent.putExtra("MAC", code);
+        this.startActivity(myIntent);
     }
 
 }
